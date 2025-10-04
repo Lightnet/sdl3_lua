@@ -1,20 +1,23 @@
+// module_sdl.h
 #ifndef MODULE_SDL_H
 #define MODULE_SDL_H
 
 #include <lua.h>
-#include <lualib.h>
-#include <lauxlib.h>
+#include <lauxlib.h> // Added for luaL_ functions
 #include <SDL3/SDL.h>
 
-// Userdata for SDL_Window
 typedef struct {
     SDL_Window* window;
 } lua_SDL_Window;
 
-// Pushes a new lua_SDL_Window userdata onto the stack.
+typedef struct {
+    SDL_Renderer* renderer;
+} lua_SDL_Renderer;
+
 void lua_push_SDL_Window(lua_State* L, SDL_Window* win);
-
-// Gets lua_SDL_Window from userdata at index.
 lua_SDL_Window* lua_check_SDL_Window(lua_State* L, int idx);
+void lua_push_SDL_Renderer(lua_State* L, SDL_Renderer* renderer);
+lua_SDL_Renderer* lua_check_SDL_Renderer(lua_State* L, int idx);
+int luaopen_sdl(lua_State* L);
 
-#endif // MODULE_SDL_H
+#endif

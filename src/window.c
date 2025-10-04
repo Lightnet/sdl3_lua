@@ -20,6 +20,8 @@ int main(int argc, char *argv[]) {
         return 1;
     }
 
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, NULL);
+
     // Main event loop
     bool running = true;
     SDL_Event event;
@@ -38,6 +40,11 @@ int main(int argc, char *argv[]) {
             }
         }
         // Add rendering or other updates here if needed
+        //SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF ); // 
+        SDL_SetRenderDrawColor( renderer, 255, 255, 0, 255 ); // return bool
+        SDL_RenderClear( renderer );
+
+        SDL_RenderPresent( renderer );
     }
 
     // Cleanup

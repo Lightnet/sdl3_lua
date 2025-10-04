@@ -14,3 +14,5 @@
   Sample SDL3 Lua 5.4. To test the window create and input.
 
   Want to keep it simple.
+
+  Render test on clear color.

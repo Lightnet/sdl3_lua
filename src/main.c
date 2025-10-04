@@ -35,6 +35,8 @@ int main(int argc, char* argv[]) {
     luaL_requiref(L, "sdl", luaopen_sdl, 1);
     lua_pop(L, 1); // Remove module from stack.
 
+    // SDL_CreateWindowAndRenderer
+
     // Determine script path: command-line arg or default to "main.lua".
     const char* script_path = (argc >= 2) ? argv[1] : "main.lua";
 
