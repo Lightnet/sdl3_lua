@@ -14,10 +14,16 @@ typedef struct {
     SDL_Renderer* renderer;
 } lua_SDL_Renderer;
 
+typedef struct {
+    SDL_Texture* texture;
+} lua_SDL_Texture; // for texture support
+
 void lua_push_SDL_Window(lua_State* L, SDL_Window* win);
 lua_SDL_Window* lua_check_SDL_Window(lua_State* L, int idx);
 void lua_push_SDL_Renderer(lua_State* L, SDL_Renderer* renderer);
 lua_SDL_Renderer* lua_check_SDL_Renderer(lua_State* L, int idx);
+void lua_push_SDL_Texture(lua_State* L, SDL_Texture* texture); 
+lua_SDL_Texture* lua_check_SDL_Texture(lua_State* L, int idx); 
 int luaopen_sdl(lua_State* L);
 
 #endif

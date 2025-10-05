@@ -14,15 +14,14 @@ end
 
 print("Window and renderer created. Press ESC or close to exit.")
 
--- Initial color (red)
-local status, err = pcall(sdl.set_render_draw_color, renderer, 255, 0, 0, 255)
-if not status then
-    print("Error setting render draw color: " .. (err or "Unknown error"))
-    return
-end
-sdl.set_render_draw_color(renderer, 255, 0, 0, 255)
-sdl.render_clear(renderer)
-sdl.render_present(renderer)
+-- Create a texture (optional, for textured geometry)
+local texture = sdl.create_texture(renderer, sdl.PIXELFORMAT_RGBA8888, sdl.TEXTUREACCESS_STATIC, 64, 64)
+-- Define vertices for a colored triangle
+local vertices = {
+    {x=400, y=100, r=1.0, g=0.0, b=0.0, a=1.0}, -- Red vertex
+    {x=300, y=500, r=0.0, g=1.0, b=0.0, a=1.0}, -- Green vertex
+    {x=500, y=500, r=0.0, g=0.0, b=1.0, a=1.0}  -- Blue vertex
+}
 
 while true do
     local events = sdl.poll_events()
@@ -62,38 +61,10 @@ while true do
     sdl.set_render_draw_color(renderer, 100, 100, 100, 255) -- White text
     sdl.render_clear(renderer)
 
-    -- Draw a single point (white)
-    sdl.set_render_draw_color(renderer, 255, 255, 255, 255)
-    sdl.render_point(renderer, 10, 10)
+    -- Render geometry (triangle, no texture, no indices)
+    sdl.render_geometry(renderer, nil, vertices, nil)
 
-    -- Draw multiple points (yellow)
-    sdl.set_render_draw_color(renderer, 255, 255, 0, 255)
-    sdl.render_points(renderer, {
-        {x=100, y=100},
-        {x=120, y=120},
-        {x=140, y=140}
-    })
 
-    -- Draw a rectangle outline (red)
-    sdl.set_render_draw_color(renderer, 255, 0, 0, 255)
-    sdl.render_rect(renderer, 200, 200, 100, 50)
-
-    -- Draw a filled rectangle (blue)
-    sdl.set_render_draw_color(renderer, 0, 0, 255, 255)
-    sdl.render_fill_rect(renderer, 350, 200, 100, 50)
-
-    -- Draw a polyline (green)
-    sdl.set_render_draw_color(renderer, 0, 255, 0, 255)
-    sdl.render_lines(renderer, {
-        {x=500, y=100},
-        {x=550, y=150},
-        {x=500, y=200},
-        {x=600, y=200}
-    })
-    
-    -- Set draw color to red and draw a line
-    sdl.set_render_draw_color(renderer, 255, 0, 0, 255)
-    sdl.render_line(renderer, 100, 100, 700, 500)
 
     -- Draw debug text
     sdl.set_render_draw_color(renderer, 255, 0, 0, 255) -- Red text

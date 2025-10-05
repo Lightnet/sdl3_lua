@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[]) {
     // Initialize SDL
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+    if (!SDL_Init(SDL_INIT_VIDEO)) {
         SDL_Log("SDL initialization failed: %s", SDL_GetError());
         return 1;
     }
@@ -43,6 +43,9 @@ int main(int argc, char *argv[]) {
         //SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF ); // 
         SDL_SetRenderDrawColor( renderer, 255, 255, 0, 255 ); // return bool
         SDL_RenderClear( renderer );
+
+        SDL_SetRenderDrawColor( renderer, 255, 0, 0, 255);
+        SDL_RenderDebugText( renderer, 10.0f, 10.0f, "TEST");
 
         SDL_RenderPresent( renderer );
     }

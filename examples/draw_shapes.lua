@@ -1,61 +1,3 @@
-# sdl3_lua
-
-# License: MIT
-
-# Program languages:
-- c language
-- cmake
-
-# libs:
-- SDL 3.2.22
-- Lua 5.4
-
-# Information:
-  This is a Sample builf for SDL3 and Lua 5.4. To test basic features renderer and inputs.
-
-  Want to keep it simple.
-
-# Lua:
-  Lua can be easy and hard.
-
-# SDL 3.2
-
-```
-Available renderer driver 0: direct3d11
-Available renderer driver 1: direct3d12
-Available renderer driver 2: direct3d
-Available renderer driver 3: opengl
-Available renderer driver 4: opengles2
-Available renderer driver 5: vulkan
-Available renderer driver 6: gpu
-Available renderer driver 7: software
-```
-
-```c
-#include <SDL3/SDL.h>
-```
-
-```c
-SDL_Window* window = SDL_CreateWindow("SDL 3 Lua", 800, 600, 0);
-```
-
-```c
-SDL_Renderer* renderer = SDL_CreateRenderer(window, NULL);
-```
-By default to direct3d11 if on windows. As it try by list one by one to load check.
-
-```c
-SDL_PropertiesID props = SDL_GetRendererProperties(renderer);
-const char* name = SDL_GetStringProperty(props, SDL_PROP_RENDERER_NAME_STRING, "unknown");
-Sint64 max_texture_size = SDL_GetNumberProperty(props, SDL_PROP_RENDERER_MAX_TEXTURE_SIZE_NUMBER, 0);
-SDL_Log("Renderer created: name=%s, max_texture_size=%lld", name, (long long)max_texture_size);
-```
- - SDL_PROP_RENDERER_NAME_STRING: the name of the rendering driver
- - SDL_PROP_RENDERER_MAX_TEXTURE_SIZE_NUMBER: the maximum texture width and height
-
-# Lua SDL 3:
-
-```lua
 -- main.txt (copied to main.lua)
 local sdl = require 'sdl'
 
@@ -117,31 +59,48 @@ while true do
     end
 
     -- Update the screen
+    sdl.set_render_draw_color(renderer, 100, 100, 100, 255) -- White text
     sdl.render_clear(renderer)
+
+    -- Draw a single point (white)
+    sdl.set_render_draw_color(renderer, 255, 255, 255, 255)
+    sdl.render_point(renderer, 10, 10)
+
+    -- Draw multiple points (yellow)
+    sdl.set_render_draw_color(renderer, 255, 255, 0, 255)
+    sdl.render_points(renderer, {
+        {x=100, y=100},
+        {x=120, y=120},
+        {x=140, y=140}
+    })
+
+    -- Draw a rectangle outline (red)
+    sdl.set_render_draw_color(renderer, 255, 0, 0, 255)
+    sdl.render_rect(renderer, 200, 200, 100, 50)
+
+    -- Draw a filled rectangle (blue)
+    sdl.set_render_draw_color(renderer, 0, 0, 255, 255)
+    sdl.render_fill_rect(renderer, 350, 200, 100, 50)
+
+    -- Draw a polyline (green)
+    sdl.set_render_draw_color(renderer, 0, 255, 0, 255)
+    sdl.render_lines(renderer, {
+        {x=500, y=100},
+        {x=550, y=150},
+        {x=500, y=200},
+        {x=600, y=200}
+    })
+
+
+
+    -- Set draw color to red and draw a line
+    sdl.set_render_draw_color(renderer, 255, 0, 0, 255)
+    sdl.render_line(renderer, 100, 100, 700, 500)
+
+    -- Draw debug text
+    sdl.set_render_draw_color(renderer, 255, 0, 0, 255) -- Red text
+    sdl.render_debug_text(renderer, 50, 50, "Testing SDL3 with Lua!")
+
+    -- Present the renderer
     sdl.render_present(renderer)
 end
-```
-
-
-
-# Notes:
-- console log will lag if there too much in logging.
-
-
-# refs:
-- https://wiki.libsdl.org/SDL3/CategoryAPI
-- https://wiki.libsdl.org/SDL3/SDL_GetRenderDriver
-- https://wiki.libsdl.org/SDL3/QuickReference
-- https://wiki.libsdl.org/SDL3/SDL_HINT_RENDER_DRIVER
-- https://wiki.libsdl.org/SDL3/SDL_GetCurrentVideoDriver
-- https://wiki.libsdl.org/SDL3/SDL_GetRendererProperties
-- https://wiki.libsdl.org/SDL3/SDL_SetHint
-- 
-
-- https://wiki.libsdl.org/SDL3/SDL_FillSurfaceRect
-- https://wiki.libsdl.org/SDL3/SDL_RenderLine
-- https://wiki.libsdl.org/SDL3/SDL_RenderDebugText
-
-# SDL_GetRendererProperties:
-- SDL_PROP_RENDERER_NAME_STRING: the name of the rendering driver
-  - direct3d11, opengl, vulkan, etc...
