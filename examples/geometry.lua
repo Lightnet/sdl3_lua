@@ -1,7 +1,7 @@
 -- main.txt (copied to main.lua)
 local sdl = require 'sdl'
 
-sdl.init()
+sdl.init(sdl.INIT_VIDEO)
 
 local window = sdl.create_window("SDL3 Renderer Demo", 800, 600, sdl.WINDOW_RESIZABLE)
 local window_id = window.windowID
@@ -73,3 +73,7 @@ while true do
     -- Present the renderer
     sdl.render_present(renderer)
 end
+
+sdl.destroy_window(window)
+window = nil
+sdl.quit()

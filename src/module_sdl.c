@@ -46,7 +46,6 @@ static void texture_metatable(lua_State* L) {
     lua_pop(L, 1);
 }
 
-
 // Helper: Push a single event as a Lua table or nil for unhandled events.
 static void push_event_table(lua_State* L, SDL_Event* e) {
     if (!e) {
@@ -286,7 +285,8 @@ lua_SDL_Renderer* lua_check_SDL_Renderer(lua_State* L, int idx) {
 
 // sdl.init(): Initialize SDL with video.
 static int l_sdl_init(lua_State* L) {
-    if (!SDL_Init(SDL_INIT_VIDEO)) { // Correct: 0 (false) means success
+    Uint32 flags = luaL_optinteger(L, 1, SDL_INIT_VIDEO); // Default to SDL_INIT_VIDEO
+    if (!SDL_Init(flags)) { // SDL_Init returns 0 on success
         luaL_error(L, "Failed to init SDL: %s", SDL_GetError());
     }
 
@@ -549,7 +549,6 @@ static int l_sdl_render_rect(lua_State* L) {
     return 0;
 }
 
-
 // Draw a filled rectangle: sdl.render_fill_rect(renderer, x, y, w, h)
 static int l_sdl_render_fill_rect(lua_State* L) {
     lua_SDL_Renderer* ud = lua_check_SDL_Renderer(L, 1);
@@ -733,10 +732,27 @@ static int l_sdl_render_geometry(lua_State* L) {
     return 0;
 }
 
+// Destroy SDL window: sdl.destroy_window(window)
+static int l_sdl_destroy_window(lua_State* L) {
+    lua_SDL_Window* window_ud = lua_check_SDL_Window(L, 1);
+    if (window_ud->window != NULL) {
+        SDL_DestroyWindow(window_ud->window);
+        window_ud->window = NULL; // Prevent double destruction
+        fprintf(stderr, "[SDL] Destroyed window: %p\n", (void*)window_ud->window);
+    }
+    return 0;
+}
 
+// SDL Quit: sdl.quit()
+static int l_sdl_quit(lua_State* L) {
+    SDL_Quit();
+    fprintf(stderr, "[SDL] Called SDL_Quit\n");
+    return 0;
+}
 
-
-
+//===============================================
+// sdl_lib
+//===============================================
 // Module loader: Register functions and constants.
 static const struct luaL_Reg sdl_lib[] = {
     {"init", l_sdl_init},
@@ -756,9 +772,14 @@ static const struct luaL_Reg sdl_lib[] = {
     {"render_lines", l_sdl_render_lines},
     {"create_texture", l_sdl_create_texture},
     {"render_geometry", l_sdl_render_geometry},
+    {"destroy_window", l_sdl_destroy_window},
+    {"quit", l_sdl_quit}, 
     {NULL, NULL}
 };
 
+//===============================================
+// module
+//===============================================
 int luaopen_sdl(lua_State* L) {
     window_metatable(L);
     renderer_metatable(L);
@@ -774,6 +795,12 @@ int luaopen_sdl(lua_State* L) {
     lua_setfield(L, -2, "WINDOW_HIDDEN");
     lua_pushinteger(L, SDL_WINDOW_BORDERLESS);
     lua_setfield(L, -2, "WINDOW_BORDERLESS");
+    lua_pushinteger(L, SDL_WINDOW_VULKAN);
+    lua_setfield(L, -2, "WINDOW_VULKAN");
+
+    // INITIALIZATION FLAGS
+    lua_pushinteger(L, SDL_INIT_VIDEO);
+    lua_setfield(L, -2, "INIT_VIDEO");
 
     // Texture pixel formats
     lua_pushinteger(L, SDL_PIXELFORMAT_RGBA8888);
@@ -825,3 +852,6 @@ int luaopen_sdl(lua_State* L) {
 
     return 1;
 }
+//===============================================
+// 
+//===============================================

@@ -15,6 +15,24 @@
 
   Want to keep it simple.
 
+# msys2:
+  This build using the windows and msys2. Required some libs to install.
+
+# build.bat
+```bat
+@echo off
+setlocal
+set MSYS2_PATH=C:\msys64\mingw64\bin
+set VULKAN_SDK=C:\VulkanSDK\1.4.313.0
+set PATH=%MSYS2_PATH%;%VULKAN_SDK%\Bin;%PATH%
+if not exist build mkdir build
+cd build
+%MSYS2_PATH%\cmake .. -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Debug -DCMAKE_C_COMPILER=%MSYS2_PATH%\gcc.exe -DCMAKE_CXX_COMPILER=%MSYS2_PATH%\g++.exe
+%MSYS2_PATH%\cmakecmake --build . --config Debug
+endlocal
+```
+
+
 # Lua:
   Lua can be easy and hard.
 
@@ -59,7 +77,7 @@ SDL_Log("Renderer created: name=%s, max_texture_size=%lld", name, (long long)max
 -- main.txt (copied to main.lua)
 local sdl = require 'sdl'
 
-sdl.init()
+sdl.init(sdl.INIT_VIDEO)
 
 local window = sdl.create_window("SDL3 Renderer Demo", 800, 600, sdl.WINDOW_RESIZABLE)
 local window_id = window.windowID
@@ -120,13 +138,14 @@ while true do
     sdl.render_clear(renderer)
     sdl.render_present(renderer)
 end
+
+sdl.destroy_window(window)
+window = nil
+sdl.quit()
 ```
-
-
 
 # Notes:
 - console log will lag if there too much in logging.
-
 
 # refs:
 - https://wiki.libsdl.org/SDL3/CategoryAPI
@@ -136,8 +155,6 @@ end
 - https://wiki.libsdl.org/SDL3/SDL_GetCurrentVideoDriver
 - https://wiki.libsdl.org/SDL3/SDL_GetRendererProperties
 - https://wiki.libsdl.org/SDL3/SDL_SetHint
-- 
-
 - https://wiki.libsdl.org/SDL3/SDL_FillSurfaceRect
 - https://wiki.libsdl.org/SDL3/SDL_RenderLine
 - https://wiki.libsdl.org/SDL3/SDL_RenderDebugText

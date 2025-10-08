@@ -1,6 +1,6 @@
 local sdl = require 'sdl'
 
-sdl.init()
+sdl.init(sdl.INIT_VIDEO)
 
 local window = sdl.create_window("SDL3 Input Demo", 800, 600, sdl.WINDOW_RESIZABLE)
 local window_id = window.windowID
@@ -39,3 +39,7 @@ while true do
         end
     end
 end
+
+sdl.destroy_window(window)
+window = nil
+sdl.quit()
