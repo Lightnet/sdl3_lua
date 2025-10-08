@@ -11,9 +11,9 @@
 - Lua 5.4
 
 # Information:
-  This is a Sample builf for SDL3 and Lua 5.4. To test basic features renderer and inputs.
+  This is a Sample build for SDL3 and Lua 5.4. To test basic features renderer and inputs.
 
-  Want to keep it simple.
+  There are examples script.
 
 # msys2:
   This build using the windows and msys2. Required some libs to install.
@@ -31,7 +31,6 @@ cd build
 %MSYS2_PATH%\cmakecmake --build . --config Debug
 endlocal
 ```
-
 
 # Lua:
   Lua can be easy and hard.
